@@ -1,25 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled from 'styled-components';
+import SimControls from './sim-controls/SimControls'
+import Bridge from './bridge/Bridge'
+//import './App.css';
+
+const Main = styled.div`
+  display: flex;
+  min-width: 100vw;
+  min-height: 100vh;
+
+  .sim {
+    flex: 1;
+    background-color: lightsteelblue;
+  }
+
+  .bridge {
+    flex: 3;
+    background-color: lightyellow;
+  }
+`
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Main class='main'>
+      <div class='sim'>
+        <SimControls class='sim'></SimControls>
+      </div>
+      <div class='bridge'>
+        <Bridge class='bridge'></Bridge>
+      </div>
+    </Main>
   );
 }
 
