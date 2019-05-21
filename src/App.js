@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import SimControls from './sim-controls/SimControls'
 import Bridge from './bridge/Bridge'
+import SimContextProvider from './sim-helpers/SimContextProvider'
 //import './App.css';
 
 const Main = styled.div`
@@ -23,12 +24,14 @@ const Main = styled.div`
 function App() {
   return (
     <Main class='main'>
-      <div class='sim'>
-        <SimControls class='sim'></SimControls>
-      </div>
-      <div class='bridge'>
-        <Bridge class='bridge'></Bridge>
-      </div>
+      <SimContextProvider>
+        <div class='sim'>
+          <SimControls class='sim'></SimControls>
+        </div>
+        <div class='bridge'>
+          <Bridge class='bridge'></Bridge>
+        </div>
+      </SimContextProvider>
     </Main>
   );
 }
