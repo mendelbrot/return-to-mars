@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import SimControls from './sim-controls/SimControls'
 import Bridge from './bridge/Bridge'
-import SimContextProvider from './sim-helpers/SimContextProvider'
 import SimEngine from './sim-helpers/SimEngine'
 //import './App.css';
 
@@ -25,15 +24,14 @@ const Main = styled.div`
 function App() {
   return (
     <Main>
-      <SimContextProvider>
-        <SimEngine/>
+      <SimEngine>
         <div className='sim'>
           <SimControls class='sim'/>
         </div>
         <div className='bridge'>
           <Bridge class='bridge'/>
         </div>
-      </SimContextProvider>
+      </SimEngine>
     </Main>
   );
 }

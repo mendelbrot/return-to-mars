@@ -20,7 +20,7 @@ class ViewScreen extends React.Component {
                     {
                         context => (
                             <h1>
-                                {context.hello}
+                                {context.secondsPerMarsYear}
                             </h1>
                         )
                     }
