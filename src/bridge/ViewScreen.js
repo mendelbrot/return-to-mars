@@ -5,6 +5,8 @@ import SimContext from '../sim-helpers/SimContext';
 
 class ViewScreen extends React.Component {
 
+    static contextType = SimContext;
+
     componentDidMount() {
         const canvas = this.refs.canvas;
         const ctx = canvas.getContext('2d')
@@ -16,15 +18,14 @@ class ViewScreen extends React.Component {
         return (
             <div>
                 <canvas ref='canvas' width={600} height={600} />
-                <SimContext.Consumer>
-                    {
-                        context => (
-                            <h1>
-                                {context.secondsPerMarsYear}
-                            </h1>
-                        )
-                    }
-                </SimContext.Consumer>
+                <div>
+                    <h1>
+                        {this.context.secondsPerMarsYear}
+                    </h1>
+                    <h2>
+                        {this.context.marsPosition[0]}
+                    </h2>
+                </div>
             </div>
         );
     }
