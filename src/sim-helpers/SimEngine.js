@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import SimContext from './SimContext';
 //import '../App.css';
@@ -86,63 +86,52 @@ class SimEngine extends React.Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
-             simContext: {
-                playing: false,
-                _secondsPerMarsYear: 12,          // the number of seconds it takes mars to make a circle on the screen
-                get secondsPerMarsYear() {
-                    return this._secondsPerMarsYear;
-                },
-                set secondsPerMarsYear(secondsPerMarsYear) {
-                    this._secondsPerMarsYear = secondsPerMarsYear;
-                    let secondsPerCalculation = this._millisecondsPerFrame / (1000 * this._calculationsPerFrame);
-                    let simSecondsPerMarsYear = 2 * Math.PI / this.constructor.marsAngularSpeed;
-                    // updating deltaT changes the simulation speed to reflect secondsPerMarsYear
-                    this.deltaT = Math.round(secondsPerCalculation * simSecondsPerMarsYear / secondsPerMarsYear)
-                },
-                _calculationsPerFrame: 10,       // calculations between view refresh
-                _millisecondsPerFrame: 50,       // milliseconds between view refresh
-                _deltaT: 600,                    // simulation seconds per calculation
-                marsPosition: [null, null],
-                shipPosition: [null, null],
-                shipVelocity: [null, null],
-                marsShipDistance: null,
-                marsShipSpeed: null,
-                timeMarsYears: 0,
-            }
+            playing: false,
+            secondsPerMarsYear: 12,         // the number of seconds it takes mars to circle the sun on the screen
+            calculationsPerFrame: 10,       // the number of calculations between view refresh
+            millisecondsPerFrame: 50,       // the number of milliseconds between view refresh
+            deltaT: 600,                    // the number of simulation seconds per calculation
+            marsPosition: [null, null],
+            shipPosition: [null, null],
+            shipVelocity: [null, null],
+            marsShipDistance: null,
+            marsShipSpeed: null,
+            timeMarsYears: 0,               // the number of times mars has circled the sun on the screen
         }
-
-        this.setState = this.setState.bind(this);
-    }
-
-    simContext = {
-        playing: false,
-        _secondsPerMarsYear: 12,          // the number of seconds it takes mars to make a circle on the screen
-        get secondsPerMarsYear() {
-            return this._secondsPerMarsYear;
-        },
-        set secondsPerMarsYear(secondsPerMarsYear) {
-            this._secondsPerMarsYear = secondsPerMarsYear;
-            let secondsPerCalculation = this._millisecondsPerFrame / (1000 * this._calculationsPerFrame);
-            let simSecondsPerMarsYear = 2*Math.PI/this.constructor.marsAngularSpeed;
-            // updating deltaT changes the simulation speed to reflect secondsPerMarsYear
-            this.deltaT = Math.round(secondsPerCalculation * simSecondsPerMarsYear / secondsPerMarsYear)
-        },
-        _calculationsPerFrame: 10,       // calculations between view refresh
-        _millisecondsPerFrame: 50,       // milliseconds between view refresh
-        _deltaT: 600,                    // simulation seconds per calculation
-        marsPosition: [null, null],
-        shipPosition: [null, null],
-        shipVelocity: [null, null],
-        marsShipDistance: null,
-        marsShipSpeed: null,
-        timeMarsYears: 0,
     }
 
     render() {
         return (
             <SimContext.Provider
-                value={this.state.simContext}
+                value={{
+                    playing: this.state.playing,
+                    secondsPerMarsYear: this.state.secondsPerMarsYear,
+                    calculationsPerFrame: this.state.calculationsPerFrame,
+                    millisecondsPerFrame: this.state.millisecondsPerFrame,
+                    deltaT: this.state.deltaT,
+                    marsPosition: this.state.marsPosition,
+                    shipPosition: this.state.shipPosition,
+                    shipVelocity: this.state.shipVelocity,
+                    marsShipDistance: this.state.marsShipDistance,
+                    marsShipSpeed: this.state.marsShipSpeed,
+                    timeMarsYears: this.state.timeMarsYears,
+                    setPlaying: (val) => { 
+                        val ? this.setState({ playing: true }) : this.setState({ playing: false });
+                    },
+                    setSecondsPerMarsYear: (val) => {
+                        this.setState({ secondsPerMarsYear: val });
+                        let secondsPerCalculation = this._millisecondsPerFrame / (1000 * this._calculationsPerFrame);
+                        let simSecondsPerMarsYear = 2 * Math.PI / this.constructor.marsAngularSpeed;
+                        // updating deltaT changes the simulation speed to reflect secondsPerMarsYear
+                        this.deltaT = Math.round(secondsPerCalculation * simSecondsPerMarsYear / val)
+                    },
+                    addToShipVelocity: (val) => {
+                        let newV = this.constructor.vectorSum(val, this.state.shipVelocity);
+                        this.setState({ shipVelocity: newV });
+                    },
+                }}
             >
                 {this.props.children}
             </SimContext.Provider>
