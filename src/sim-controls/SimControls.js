@@ -7,7 +7,6 @@ function SimControls() {
     return (
         <div>
             <p>sim</p>
-            <SimEngine></SimEngine>
         </div>
     );
 }
