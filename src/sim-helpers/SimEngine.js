@@ -84,6 +84,17 @@ class SimEngine extends React.Component {
         });
     }
 
+    static calculateMaxDistance = (simObjectsList) => {
+        let maxDistance = 0;
+        simObjectsList.forEach((object) => {
+            let distance = this.magnitudeVectorDifference(object.position, [0, 0]);
+            if (distance > maxDistance) {
+                maxDistance = distance;
+            }
+        });
+        return maxDistance;
+    }
+
     static SimObjectTemplate = {
         position: [0, 0],
         velocity: [0, 0],
@@ -113,6 +124,7 @@ class SimEngine extends React.Component {
             marsShipDistance: null,
             marsShipSpeed: null,
             timeMarsYears: 0,               // the number of times mars has circled the sun on the screen
+            maxDistance: 6 * Math.pow(10, 11)  // the furthest distance fron the sun of any object, for canvas scaling             
         }
 
         this.setPlaying = this.setPlaying.bind(this);
@@ -126,7 +138,7 @@ class SimEngine extends React.Component {
 
     resetSimulation = () => {
         this.setSecondsPerMarsYear(this.state.secondsPerMarsYear);
-        this.setState({timeMarsYears: 0});
+        this.setState({ timeMarsYears: 0});
 
         let s = this.simVariables;
         let c = this.constructor.constants;
@@ -144,19 +156,24 @@ class SimEngine extends React.Component {
     };
 
     setStateFromSimVariables = (addToTime) => {
-        let newT = addToTime ? 
-            this.state.timeMarsYears + this.state.deltaT * this.state.calculationsPerFrame : 
-            this.state.timeMarsYears;
-        this.setState({ 
-            marsPosition: this.simVariables.mars.position, 
-            shipPosition: this.simVariables.ship.position,
-            shipVelocity: this.simVariables.ship.velocity,
-            marsShipDistance: 
-                this.constructor.magnitudeVectorDifference(this.simVariables.mars.position, this.simVariables.ship.position),
-            marsShipSpeed: 
-                this.constructor.magnitudeVectorDifference(this.simVariables.mars.velocity, this.simVariables.ship.velocity),
-            timeMarsYears: newT,
-        });
+        this.setState( (state) => { 
+            let newT = addToTime ?
+                state.timeMarsYears + state.deltaT * state.calculationsPerFrame :
+                state.timeMarsYears;
+            return {
+                marsPosition: this.simVariables.mars.position,
+                shipPosition: this.simVariables.ship.position,
+                shipVelocity: this.simVariables.ship.velocity,
+                marsShipDistance:
+                    this.constructor.magnitudeVectorDifference(this.simVariables.mars.position, this.simVariables.ship.position),
+                marsShipSpeed:
+                    this.constructor.magnitudeVectorDifference(this.simVariables.mars.velocity, this.simVariables.ship.velocity),
+                timeMarsYears: newT,
+                maxDistance: 
+                    this.constructor.calculateMaxDistance([this.simVariables.ship, this.simVariables.mars]),
+            }      
+        }, 
+        );
     }
 
     playSimulation = () => {
@@ -188,7 +205,9 @@ class SimEngine extends React.Component {
         this.setState({ shipVelocity: newV });
     };
 
-    
+    pushFunctionToResetCallbackList = (f) => {
+        this.pushFunctionToResetCallbackList.push(f);
+    };
 
     render() {
         return (
@@ -205,6 +224,7 @@ class SimEngine extends React.Component {
                     marsShipDistance: this.state.marsShipDistance,
                     marsShipSpeed: this.state.marsShipSpeed,
                     timeMarsYears: this.state.timeMarsYears,
+                    maxDistance: this.state.maxDistance,
 
                     // setters
                     setPlaying: this.setPlaying,
