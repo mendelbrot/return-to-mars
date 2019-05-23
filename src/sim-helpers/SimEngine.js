@@ -112,6 +112,8 @@ class SimEngine extends React.Component {
         deltaT: 2000,                   // the number of simulation seconds per calculation
     }
 
+    stateChangeCallbackList = [];
+
     constructor(props) {
         super(props);
 
@@ -130,6 +132,7 @@ class SimEngine extends React.Component {
         this.setPlaying = this.setPlaying.bind(this);
         this.setSecondsPerMarsYear = this.setSecondsPerMarsYear.bind(this);
         this.addToShipVelocity = this.addToShipVelocity.bind(this);
+        this.pushFunctionToStateChangeCallbackList = this.pushFunctionToStateChangeCallbackList.bind(this);
     }
 
     componentDidMount() {
@@ -172,7 +175,7 @@ class SimEngine extends React.Component {
                 maxDistance: 
                     this.constructor.calculateMaxDistance([this.simVariables.ship, this.simVariables.mars]),
             }      
-        }, 
+        }, () => this.stateChangeCallbackList.forEach((f) => f.call() )
         );
     }
 
@@ -205,8 +208,8 @@ class SimEngine extends React.Component {
         this.setState({ shipVelocity: newV });
     };
 
-    pushFunctionToResetCallbackList = (f) => {
-        this.pushFunctionToResetCallbackList.push(f);
+    pushFunctionToStateChangeCallbackList = (f) => {
+        this.stateChangeCallbackList.push(f);
     };
 
     render() {
@@ -230,6 +233,7 @@ class SimEngine extends React.Component {
                     setPlaying: this.setPlaying,
                     setSecondsPerMarsYear: this.setSecondsPerMarsYear,
                     addToShipVelocity: this.addToShipVelocity,
+                    pushFunctionToStateChangeCallbackList: this.pushFunctionToStateChangeCallbackList,
                 }}
             >
                 {this.props.children}

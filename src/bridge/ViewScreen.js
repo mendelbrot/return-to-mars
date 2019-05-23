@@ -17,17 +17,19 @@ class ViewScreen extends React.Component {
     constructor(props) {
         super(props);
 
-        this.simEngineHasResetCallback = this.simEngineHasResetCallback.bind(this);
+        this.simEngineStateChangeCallback = this.simEngineStateChangeCallback.bind(this);
     }
 
     componentDidMount = () => {
+
+        this.context.pushFunctionToStateChangeCallbackList(this.simEngineStateChangeCallback)
 
         this.initializeCanvas();
 
     }
 
-    simEngineHasResetCallback = () => {
-        setTimeout(this.drawMars, 1000);
+    simEngineStateChangeCallback = () => {
+        this.drawMars();
     }
 
     initializeCanvas = () => {
