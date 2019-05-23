@@ -129,17 +129,55 @@ class SimEngine extends React.Component {
             maxDistance: 6 * Math.pow(10, 11)  // the furthest distance fron the sun of any object, for canvas scaling             
         }
 
-        this.setPlaying = this.setPlaying.bind(this);
         this.setSecondsPerMarsYear = this.setSecondsPerMarsYear.bind(this);
         this.addToShipVelocity = this.addToShipVelocity.bind(this);
         this.pushFunctionToStateChangeCallbackList = this.pushFunctionToStateChangeCallbackList.bind(this);
+        this.playSim = this.playSim.bind(this);
+        this.pauseSim = this.pauseSim.bind(this);
+        this.resetSim = this.resetSim.bind(this);
     }
 
     componentDidMount() {
-        this.resetSimulation();
+        this.resetSim();
     }
 
-    resetSimulation = () => {
+    playSim = () => {
+
+        if (this.state.playing) {
+            return
+        };
+
+        this.setState({ playing: true }, () => {
+            var interval = setInterval(() => {
+
+                if (!this.state.playing) {
+                    clearInterval(interval);
+                };
+
+                for (let i = 0; i < this.simVariables.calculationsPerFrame; i++) {
+                    this.calcNextState();
+                };
+
+                this.setStateFromSimVariables();
+                console.log('playing');
+
+            }, this.simVariables.millisecondsPerFrame);
+        });
+
+
+    };
+
+    pauseSim = () => {
+
+        if (!this.state.playing) {
+            return
+        };
+
+        this.setState({ playing: false });
+    };
+
+    resetSim = () => {
+        this.pauseSim();
         this.setSecondsPerMarsYear(this.state.secondsPerMarsYear);
         this.setState({ timeMarsYears: 0});
 
@@ -158,6 +196,10 @@ class SimEngine extends React.Component {
         this.setStateFromSimVariables();
     };
 
+    calcNextState = () => {
+
+    };
+
     setStateFromSimVariables = (addToTime) => {
         this.setState( (state) => { 
             let newT = addToTime ?
@@ -174,25 +216,9 @@ class SimEngine extends React.Component {
                 timeMarsYears: newT,
                 maxDistance: 
                     this.constructor.calculateMaxDistance([this.simVariables.ship, this.simVariables.mars]),
-            }      
+            };      
         }, () => this.stateChangeCallbackList.forEach((f) => f.call() )
         );
-    }
-
-    playSimulation = () => {
-        this.setState({ playing: true });
-    };
-
-    pauseSimulation = () => {
-        this.setState({ playing: false });
-    };
-
-    setPlaying = (val) => {
-        if (val) { 
-            this.playSimulation();
-        } else {     
-            this.pauseSimulation();
-        }
     };
 
     setSecondsPerMarsYear = (val) => {
@@ -230,7 +256,9 @@ class SimEngine extends React.Component {
                     maxDistance: this.state.maxDistance,
 
                     // setters
-                    setPlaying: this.setPlaying,
+                    playSim: this.playSim,
+                    pauseSim: this.pauseSim,
+                    resetSim: this.resetSim,
                     setSecondsPerMarsYear: this.setSecondsPerMarsYear,
                     addToShipVelocity: this.addToShipVelocity,
                     pushFunctionToStateChangeCallbackList: this.pushFunctionToStateChangeCallbackList,

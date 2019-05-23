@@ -10,7 +10,6 @@ const SimControls = (props) => {
 
     const handleSecondsPerMarsYearChange = (evt) => {
         context.setSecondsPerMarsYear(evt.target.value);
-        console.log(evt.target.value);
     }
 
     return (
@@ -21,9 +20,9 @@ const SimControls = (props) => {
                 min={1} max={60} type="number" step="1" 
                 onChange={handleSecondsPerMarsYearChange}
             />
-            <Button onClick={playSimulation}>Play</Button>
-            <Button onClick={pauseSimulation}>Pause</Button>
-            <Button onClick={resetSimulation}>Reset</Button>
+            <Button onClick={context.playSim}>Play</Button>
+            <Button onClick={context.pauseSim}>Pause</Button>
+            <Button onClick={context.resetSim}>Reset</Button>
         </div>
     );
     
