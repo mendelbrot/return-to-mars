@@ -1,22 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import ViewScreen from './ViewScreen';
 import Instruments from './Instruments';
 import HelmControls from './HelmControls';
+import SimContext from '../sim-helpers/SimContext';
 
 
 const BrLayout = styled.div`
     display: flex;
 `
 
-function Bridge() {
+function Bridge(props) {
 
-    // const bridgeData = {
-    //     deltaV: deltaV,
-    //     setDeltaV: setDeltaV,
-    //     theta: theta,
-    //     setTheta: setTheta,
-    // }
+    const context  = useContext(SimContext);
+
+    const [deltaV, setDeltaV] = useState(0);
+    const [theta, setTheta] = useState(0);
+    const [deltaVReserve, setDeltaVReserve] = useState(context.initialDeltaVReserve);
+
+    const helmData = {
+        deltaV: deltaV,
+        setDeltaV: setDeltaV,
+        theta: theta,
+        setTheta: setTheta,
+        deltaVReserve: deltaVReserve,
+        setDeltaVReserve: setDeltaVReserve,
+        initialDeltaVReserve: context.initialDeltaVReserve
+    }
     
     return (
         <BrLayout>
@@ -25,7 +35,7 @@ function Bridge() {
                     <ViewScreen />
                 </div>
                 <div className='helm'>
-                    <HelmControls />
+                    <HelmControls helmData={helmData} />
                 </div>
             </div>
             <div className='inst'>
