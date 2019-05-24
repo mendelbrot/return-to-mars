@@ -8,7 +8,7 @@ class MathUtil {
         sunMass: 1.98855 * Math.pow(10, 30),            // kg
     };
 
-    static convertPolarPositionToCartesian = (polarPosition) => {
+    static convertPolarToCartesian = (polarPosition) => {
 
         return [polarPosition[0] * Math.cos(polarPosition[1]), polarPosition[0] * Math.sin(polarPosition[1])];
     }
@@ -18,6 +18,17 @@ class MathUtil {
         return [
             polarVelocity[0] * Math.cos(polarPosition[1]) - polarPosition[0] * polarVelocity[1] * Math.sin(polarPosition[1]),
             polarVelocity[0] * Math.sin(polarPosition[1]) + polarPosition[0] * polarVelocity[1] * Math.cos(polarPosition[1])
+        ]
+    }
+
+    // for when you want to find the cartesian velocity, given the polar velocity and cartesian position
+    static convertPolarVToCartAtCartP = (polarV, cartP) => {
+
+        let r = this.magnitudeVectorDifference(cartP, [0, 0]);
+
+        return [
+            polarV[0] * cartP[0] / r - polarV[1] * cartP[1],
+            polarV[0] * cartP[1] / r + polarV[1] * cartP[0]
         ]
     }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ViewScreen from './ViewScreen';
 import Instruments from './Instruments';
@@ -10,6 +10,14 @@ const BrLayout = styled.div`
 `
 
 function Bridge() {
+
+    // const bridgeData = {
+    //     deltaV: deltaV,
+    //     setDeltaV: setDeltaV,
+    //     theta: theta,
+    //     setTheta: setTheta,
+    // }
+    
     return (
         <BrLayout>
             <div className='left'>

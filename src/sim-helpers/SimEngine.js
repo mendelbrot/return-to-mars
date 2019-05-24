@@ -98,7 +98,7 @@ class SimEngine extends React.Component {
         s.sun.mass = c.sunMass;
         s.mars.mass = c.marsMass;
         s.mars.position = 
-            MathUtil.convertPolarPositionToCartesian([c.marsSunDistance, 0]);
+            MathUtil.convertPolarToCartesian([c.marsSunDistance, 0]);
         s.mars.velocity =
             MathUtil.convertPolarVelocityToCartesian([0, c.marsAngularSpeed], [c.marsSunDistance, 0]);
         s.mars.r = c.marsSunDistance; //adding r, theta to mars to facilitate calculationg circular motion
@@ -116,7 +116,7 @@ class SimEngine extends React.Component {
 
         // move mars in a circle
         s.mars.theta += c.marsAngularSpeed * s.deltaT;
-        s.mars.position = MathUtil.convertPolarPositionToCartesian([s.mars.r, s.mars.theta]);
+        s.mars.position = MathUtil.convertPolarToCartesian([s.mars.r, s.mars.theta]);
 
         //move spaceship
         s.ship.position = MathUtil.vectorSum(
@@ -164,8 +164,12 @@ class SimEngine extends React.Component {
         this.simVariables.deltaT = secondsPerCalculation * simSecondsPerMarsYear / val;
     };
 
+    // recieves deltaV in polar coordinates
     addDeltaV = (deltaV) => {
-        this.simVariables.ship.velocity = MathUtil.vectorSum(this.simVariables.ship.velocity, deltaV);
+        this.simVariables.ship.velocity = 
+            MathUtil.vectorSum(
+                this.simVariables.ship.velocity,
+                MathUtil.convertPolarToCartesian(deltaV));
     };
 
     setSpeedTolerance = (val) => {

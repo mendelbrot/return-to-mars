@@ -15,7 +15,7 @@ function HelmControls() {
 
     return (
         <Helm>
-            <Button onClick={() => context.addDeltaV([10000, 0])}>Fire</Button>
+            <Button onClick={() => context.addDeltaV([100000, Math.PI])}>Fire</Button>
         </Helm>
     );
 }

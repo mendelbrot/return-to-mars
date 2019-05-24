@@ -8,8 +8,8 @@ class ViewScreen extends React.Component {
 
     static contextType = SimContext;
 
-    // screen width
-    width = 500;  
+    // view-screen width
+    width = 500; //window.innerWidth / 3;  
 
     //canvas objects
     canvas = null;
