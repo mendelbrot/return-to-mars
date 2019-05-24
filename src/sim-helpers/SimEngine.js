@@ -33,17 +33,25 @@ class SimEngine extends React.Component {
             timeMarsYears: 0,               // the number of times mars has circled the sun on the screen
             maxDistance: 6 * Math.pow(10, 11),  // the furthest distance fron the sun of any object, for canvas scaling 
             speedTolerance: 1.0 * Math.pow(10, 3),    
-            distanceTolerance: 1.0 * Math.pow(10, 10),            
+            distanceTolerance: 1.0 * Math.pow(10, 10), 
+            initialDeltaVReserve: 10000,
+            deltaVReserve: 10000,
+            timeLimit: 5,        
         }
 
         this.setSecondsPerMarsYear = this.setSecondsPerMarsYear.bind(this);
         this.addDeltaV = this.addDeltaV.bind(this);
         this.setSpeedTolerance = this.setSpeedTolerance.bind(this);
         this.setDistanceTolerance = this.setDistanceTolerance.bind(this);
-        this.pushFunctionToStateChangeCallbackList = this.pushFunctionToStateChangeCallbackList.bind(this);
+        this.setInitialDeltaVReserve = this.setInitialDeltaVReserve.bind(this);
+        this.setDeltaVReserve = this.setDeltaVReserve.bind(this);
+        this.setTimeLimit = this.setTimeLimit.bind(this);
+        
         this.playSim = this.playSim.bind(this);
         this.pauseSim = this.pauseSim.bind(this);
         this.resetSim = this.resetSim.bind(this);
+
+        this.pushFunctionToStateChangeCallbackList = this.pushFunctionToStateChangeCallbackList.bind(this);
     }
 
     componentDidMount() {
@@ -166,6 +174,21 @@ class SimEngine extends React.Component {
 
     // recieves deltaV in polar coordinates
     addDeltaV = (deltaV) => {
+
+        // don't do anything if there's no propellent left
+        if (this.state.deltaVReserve == 0) {
+            return
+        }
+
+        // if there isn't enough propellant, then just give what you can
+        if (deltaV[0] > this.state.deltaVReserve) {
+            deltaV[0] = this.state.deltaVReserve;
+            this.setState({deltaVReserve: 0});
+        } else {
+            this.setState((state) => { return { deltaVReserve: state.deltaVReserve - deltaV[0] }});
+        }
+
+        // add the deltaV to the ship's velocity
         this.simVariables.ship.velocity = 
             MathUtil.vectorSum(
                 this.simVariables.ship.velocity,
@@ -178,6 +201,18 @@ class SimEngine extends React.Component {
 
     setDistanceTolerance = (val) => {
         this.setState({ distanceTolerance: val });
+    };
+
+    setInitialDeltaVReserve = (val) => {
+        this.setState({ initialDeltaVReserve: val });
+    };
+
+    setDeltaVReserve = (val) => {
+        this.setState({ deltaVReserve: val });
+    };
+
+    setTimeLimit = (val) => {
+        this.setState({ timeLimit: val });
     };
 
     pushFunctionToStateChangeCallbackList = (f) => {
@@ -202,6 +237,9 @@ class SimEngine extends React.Component {
                     maxDistance: this.state.maxDistance,
                     speedTolerance: this.state.speedTolerance,
                     distanceTolerance: this.state.distanceTolerance,
+                    initialDeltaVReserve: this.state.initialDeltaVReserve,
+                    deltaVReserve: this.state.deltaVReserve,
+                    timeLimit: this.state.timeLimit,      
 
                     // setters
                     playSim: this.playSim,
@@ -210,6 +248,9 @@ class SimEngine extends React.Component {
                     setSecondsPerMarsYear: this.setSecondsPerMarsYear,
                     setSpeedTolerance: this.setSpeedTolerance,
                     setDistanceTolerance: this.setDistanceTolerance,
+                    setInitialDeltaVReserve: this.setInitialDeltaVReserve,
+                    setDeltaVReserve: this.setDeltaVReserve,
+                    setTimeLimit: this.setTimeLimit,
                     addDeltaV: this.addDeltaV,
                     pushFunctionToStateChangeCallbackList: this.pushFunctionToStateChangeCallbackList,
                 }}
