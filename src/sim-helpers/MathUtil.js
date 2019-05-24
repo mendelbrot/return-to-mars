@@ -53,6 +53,7 @@ class MathUtil {
 
         indexList.forEach((currentIndex) => {
             var currentObject = simObjectsList[currentIndex];
+            currentObject.accelleration = [0, 0];
             simObjectsList.forEach((element, index) => {
                 if (index !== currentIndex) {
                     currentObject.accelleration[0] +=
