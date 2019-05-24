@@ -1,111 +1,16 @@
 import React from 'react';
 import SimContext from './SimContext';
+import MathUtil from './MathUtil';
 //import '../App.css';
 
 class SimEngine extends React.Component {
 
     static contextType = SimContext;
 
-    static constants = {
-        G: 6.67408 * Math.pow(10, -11),
-        marsSunDistance: 2.279 * Math.pow(10, 11),      // meters
-        marsAngularSpeed: 1.059 * Math.pow(10, -7),     // radians per second
-        marsMass: 6.417 * Math.pow(10, 23),             // kg
-        sunMass: 1.98855 * Math.pow(10, 30),            // kg
-    };
-
-    static convertPolarPositionToCartesian = (polarPosition) => {
-
-        return [polarPosition[0] * Math.cos(polarPosition[1]), polarPosition[0] * Math.sin(polarPosition[1])];
-    }
-
-    static convertPolarVelocityToCartesian = (polarVelocity, polarPosition) => {
-
-        return [
-            polarVelocity[0] * Math.cos(polarPosition[1]) - polarPosition[0] * polarVelocity[1] * Math.sin(polarPosition[1]),
-            polarVelocity[0] * Math.sin(polarPosition[1]) + polarPosition[0] * polarVelocity[1] * Math.cos(polarPosition[1])
-        ]
-    }
-
-    static vectorSum = (A1, A2) => {
-        return A1.map( (element, index) => {
-            return element + A2[index];
-        });
-    }
-
-    static multiplyNumberVector = (s, A) => {
-        return A.map((element) => {
-            return s * element;
-        });
-    }
-
-    static magnitudeVectorDifference = (A1, A2) => {
-        let normSquared = 0;
-        A1.forEach((element, index) => {
-            normSquared += (element - A2[index])**2;
-        });
-        return Math.sqrt(normSquared);
-    }
-
-    // calculates the accelleration of each object due to gravitational force from all the other objects
-    // if indexList is specified then only update the accellerations at those indices
-    static updateAccelleration = (simObjectsList, indexList) => {
-
-        if (!indexList) {
-            indexList = simObjectsList.map((element, index) => {
-                return index;
-            });
-        }
-
-        indexList.forEach((currentIndex) => {
-            var currentObject = simObjectsList[currentIndex];
-            simObjectsList.forEach( (element, index) => {
-                if (index !== currentIndex) {
-                    currentObject.accelleration[0] +=
-                        this.constants.G
-                        * element.mass
-                        * (element.position[0] - currentObject.position[0])
-                        * Math.pow(
-                            Math.pow(element.position[0] - currentObject.position[0], 2)
-                            + Math.pow(element.position[1] - currentObject.position[1], 2),
-                            -3 / 2
-                        );
-                    currentObject.accelleration[1] +=
-                        this.constants.G
-                        * element.mass
-                        * (element.position[1] - currentObject.position[1])
-                        * Math.pow(
-                            Math.pow(element.position[0] - currentObject.position[0], 2)
-                            + Math.pow(element.position[1] - currentObject.position[1], 2),
-                            -3 / 2
-                        );
-                };
-            });
-        });
-    }
-
-    static calculateMaxDistance = (simObjectsList) => {
-        let maxDistance = 0;
-        simObjectsList.forEach((object) => {
-            let distance = this.magnitudeVectorDifference(object.position, [0, 0]);
-            if (distance > maxDistance) {
-                maxDistance = distance;
-            }
-        });
-        return maxDistance;
-    }
-
-    static SimObjectTemplate = {
-        position: [0, 0],
-        velocity: [0, 0],
-        accelleration: [0, 0],
-        mass: 0,
-    }
-
     simVariables = {
-        sun: Object.assign({}, this.constructor.SimObjectTemplate),
-        mars: Object.assign({}, this.constructor.SimObjectTemplate),
-        ship: Object.assign({}, this.constructor.SimObjectTemplate),
+        sun: Object.assign({}, MathUtil.SimObjectTemplate),
+        mars: Object.assign({}, MathUtil.SimObjectTemplate),
+        ship: Object.assign({}, MathUtil.SimObjectTemplate),
 
         calculationsPerFrame: 10,       // the number of calculations between view refresh
         millisecondsPerFrame: 50,       // the number of milliseconds between view refresh
@@ -143,15 +48,18 @@ class SimEngine extends React.Component {
 
     playSim = () => {
 
+        // do not proceed if the sim is already playing
         if (this.state.playing) {
-            return
+            return;
         };
 
         this.setState({ playing: true }, () => {
             var interval = setInterval(() => {
 
+                // pause if state.playing has been set to false
                 if (!this.state.playing) {
                     clearInterval(interval);
+                    return;
                 };
 
                 for (let i = 0; i < this.simVariables.calculationsPerFrame; i++) {
@@ -182,16 +90,16 @@ class SimEngine extends React.Component {
         this.setState({ timeMarsYears: 0});
 
         let s = this.simVariables;
-        let c = this.constructor.constants;
+        let c = MathUtil.constants;
 
         s.sun.mass = c.sunMass;
         s.mars.mass = c.marsMass;
         s.mars.position = 
-            this.constructor.convertPolarPositionToCartesian([c.marsSunDistance, 0]);
+            MathUtil.convertPolarPositionToCartesian([c.marsSunDistance, 0]);
         s.mars.velocity =
-            this.constructor.convertPolarVelocityToCartesian([0, c.marsAngularSpeed], [c.marsSunDistance, 0]);
-        s.ship.position = this.constructor.multiplyNumberVector(2, s.mars.position);
-        s.ship.velocity = this.constructor.multiplyNumberVector(0.5, s.mars.velocity);
+            MathUtil.convertPolarVelocityToCartesian([0, c.marsAngularSpeed], [c.marsSunDistance, 0]);
+        s.ship.position = MathUtil.multiplyNumberVector(2, s.mars.position);
+        s.ship.velocity = MathUtil.multiplyNumberVector(0.5, s.mars.velocity);
 
         this.setStateFromSimVariables();
     };
@@ -210,12 +118,12 @@ class SimEngine extends React.Component {
                 shipPosition: this.simVariables.ship.position,
                 shipVelocity: this.simVariables.ship.velocity,
                 marsShipDistance:
-                    this.constructor.magnitudeVectorDifference(this.simVariables.mars.position, this.simVariables.ship.position),
+                    MathUtil.magnitudeVectorDifference(this.simVariables.mars.position, this.simVariables.ship.position),
                 marsShipSpeed:
-                    this.constructor.magnitudeVectorDifference(this.simVariables.mars.velocity, this.simVariables.ship.velocity),
+                    MathUtil.magnitudeVectorDifference(this.simVariables.mars.velocity, this.simVariables.ship.velocity),
                 timeMarsYears: newT,
                 maxDistance: 
-                    this.constructor.calculateMaxDistance([this.simVariables.ship, this.simVariables.mars]),
+                    MathUtil.calculateMaxDistance([this.simVariables.ship, this.simVariables.mars]),
             };      
         }, () => this.stateChangeCallbackList.forEach((f) => f.call() )
         );
@@ -224,13 +132,13 @@ class SimEngine extends React.Component {
     setSecondsPerMarsYear = (val) => {
         this.setState({ secondsPerMarsYear: val });
         let secondsPerCalculation = this.simVariables.millisecondsPerFrame / (1000 * this.simVariables.calculationsPerFrame);
-        let simSecondsPerMarsYear = 2 * Math.PI / this.constructor.constants.marsAngularSpeed;
+        let simSecondsPerMarsYear = 2 * Math.PI / MathUtil.constants.marsAngularSpeed;
         // updating deltaT changes the simulation speed to reflect secondsPerMarsYear
         this.simVariables.deltaT = secondsPerCalculation * simSecondsPerMarsYear / val;
     };
 
     addToShipVelocity = (val) => {
-        let newV = this.constructor.vectorSum(val, this.state.shipVelocity);
+        let newV = MathUtil.vectorSum(val, this.state.shipVelocity);
         this.setState({ shipVelocity: newV });
     };
 
