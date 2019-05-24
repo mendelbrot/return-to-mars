@@ -1,4 +1,11 @@
+import React from 'react';
 import styled from 'styled-components';
+
+// const Div = ({ className, children }) => (
+//     <div className={className}>
+//         {children}
+//     </div>
+// );
 
 export const PanelBox = styled.div`
     min-width: 100px;

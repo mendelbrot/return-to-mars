@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { PanelBox } from '../SharedStyles';
-//import '../App.css';
+
 
 const Helm = styled(PanelBox)`
     min-width: 100px;

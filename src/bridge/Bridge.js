@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ViewScreen from './ViewScreen';
 import Instruments from './Instruments';
 import HelmControls from './HelmControls';
-//import '../App.css';
+
 
 const BrLayout = styled.div`
     display: flex;

@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import styled from 'styled-components';
 import { Input, Button } from 'reactstrap'
 import SimContext from '../sim-helpers/SimContext';
-//import '../App.css';
+
 
 const SimControls = (props) => {
 

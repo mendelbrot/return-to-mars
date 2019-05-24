@@ -26,10 +26,10 @@ function App() {
     <Main>
       <SimEngine>
         <div className='sim'>
-          <SimControls class='sim'/>
+          <SimControls/>
         </div>
         <div className='bridge'>
-          <Bridge class='bridge'/>
+          <Bridge/>
         </div>
       </SimEngine>
     </Main>

@@ -1,7 +1,7 @@
 import React from 'react';
 import SimContext from './SimContext';
 import MathUtil from './MathUtil';
-//import '../App.css';
+
 
 class SimEngine extends React.Component {
 
@@ -66,8 +66,7 @@ class SimEngine extends React.Component {
                     this.calcNextState();
                 };
 
-                this.setStateFromSimVariables();
-                console.log('playing');
+                this.setStateFromSimVariables(true);
 
             }, this.simVariables.millisecondsPerFrame);
         });
@@ -133,8 +132,9 @@ class SimEngine extends React.Component {
 
     setStateFromSimVariables = (addToTime) => {
         this.setState( (state) => { 
-            let newT = addToTime ?
-                state.timeMarsYears + state.deltaT * state.calculationsPerFrame :
+            let newT = addToTime ?  // update the time, in mars years
+                state.timeMarsYears 
+                    + MathUtil.constants.marsAngularSpeed * this.simVariables.deltaT * this.simVariables.calculationsPerFrame / 2 /Math.PI :
                 state.timeMarsYears;
             return {
                 marsPosition: this.simVariables.mars.position,
@@ -154,7 +154,7 @@ class SimEngine extends React.Component {
 
     setSecondsPerMarsYear = (val) => {
         this.setState({ secondsPerMarsYear: val });
-        let secondsPerCalculation = this.simVariables.millisecondsPerFrame / (1000 * this.simVariables.calculationsPerFrame);
+        let secondsPerCalculation = this.simVariables.millisecondsPerFrame / 1000 / this.simVariables.calculationsPerFrame;
         let simSecondsPerMarsYear = 2 * Math.PI / MathUtil.constants.marsAngularSpeed;
         // updating deltaT changes the simulation speed to reflect secondsPerMarsYear
         this.simVariables.deltaT = secondsPerCalculation * simSecondsPerMarsYear / val;

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import SimContext from '../sim-helpers/SimContext';
 import ship from '../images/rocket.png'
-//import '../App.css';
+
 
 class ViewScreen extends React.Component {
 
