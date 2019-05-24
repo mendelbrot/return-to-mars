@@ -32,6 +32,7 @@ class ViewScreen extends React.Component {
     }
 
     simEngineStateChangeCallback = () => {
+        this.drawBackground();
         this.drawMars();
         this.drawShip();
     }
@@ -43,18 +44,21 @@ class ViewScreen extends React.Component {
         let shw = 0.5 * this.width;
         this.ctx.translate(shw, shw);     //origin at the center
         this.ctx.scale(1, -1);            //flip the y axis to correspond to math convention
+    }
 
+    drawBackground = () => {
         // draw ViewScreen
-        let d = 0.5*shw;
+        let shw = 0.5 * this.width;
+        let d = 0.5 * shw;
         this.ctx.beginPath();
         this.ctx.moveTo(-shw, d);
-        this.ctx.quadraticCurveTo(-shw, shw, -d, shw );
+        this.ctx.quadraticCurveTo(-shw, shw, -d, shw);
         this.ctx.lineTo(d, shw);
         this.ctx.quadraticCurveTo(shw, shw, shw, d);
         this.ctx.lineTo(shw, -d);
         this.ctx.quadraticCurveTo(shw, -shw, d, -shw);
         this.ctx.lineTo(-d, -shw);
-        this.ctx.quadraticCurveTo(-shw, -shw, -shw, -d);   
+        this.ctx.quadraticCurveTo(-shw, -shw, -shw, -d);
         this.ctx.closePath();
         this.ctx.fillStyle = 'black';
         this.ctx.fill();
@@ -66,9 +70,6 @@ class ViewScreen extends React.Component {
         this.ctx.fill();
         this.ctx.strokeStyle = 'orange';
         this.ctx.stroke();
-
-        // save the context so it can be restored before drawing the next frame
-        this.ctx.save();
     }
 
     drawMars = () => {
@@ -86,9 +87,9 @@ class ViewScreen extends React.Component {
         let shipX = this.rescale(this.context.shipPosition[0]);
         let shipY = this.rescale(this.context.shipPosition[1]);
         let shipWidth = 40;
-        this.ship.onload = () => {
-            this.ctx.drawImage(this.ship, shipX - shipWidth / 2, shipY - shipWidth / 2, shipWidth, shipWidth)
-        };
+        this.ctx.drawImage(this.ship, shipX - shipWidth / 2, shipY - shipWidth / 2, shipWidth, shipWidth)
+        // if the ship image isn't avaliable yet, call this function back when it is
+        this.ship.onload = this.drawShip;
     }
 
     // rescale distances in km to distances in px that fit in the viewscreen

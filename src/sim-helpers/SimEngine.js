@@ -98,6 +98,8 @@ class SimEngine extends React.Component {
             MathUtil.convertPolarPositionToCartesian([c.marsSunDistance, 0]);
         s.mars.velocity =
             MathUtil.convertPolarVelocityToCartesian([0, c.marsAngularSpeed], [c.marsSunDistance, 0]);
+        s.mars.r = c.marsSunDistance; //adding r, theta to mars to facilitate calculationg circular motion
+        s.mars.theta = 0;
         s.ship.position = MathUtil.multiplyNumberVector(2, s.mars.position);
         s.ship.velocity = MathUtil.multiplyNumberVector(0.5, s.mars.velocity);
 
@@ -106,6 +108,29 @@ class SimEngine extends React.Component {
 
     calcNextState = () => {
 
+        let s = this.simVariables;
+        let c = MathUtil.constants;
+
+        // move mars in a circle
+        s.mars.theta += c.marsAngularSpeed * s.deltaT;
+        s.mars.position = MathUtil.convertPolarPositionToCartesian([s.mars.r, s.mars.theta]);
+
+        // move spaceship
+        //SpaceShip.cartesianPosition = mathUtil.vectorSum(
+        //     SpaceShip.cartesianPosition,
+        //     mathUtil.multiplyNumberVector(simulationParameters.deltaT / 2, SpaceShip.cartesianVelocity)
+        // )
+        // mathUtil.updateAcceleration(SpaceShip)
+        // SpaceShip.cartesianVelocity = mathUtil.vectorSum(
+        //     SpaceShip.cartesianVelocity,
+        //     mathUtil.multiplyNumberVector(simulationParameters.deltaT, SpaceShip.cartesianAccelleration)
+        // )
+        // SpaceShip.cartesianPosition = mathUtil.vectorSum(
+        //     SpaceShip.cartesianPosition,
+        //     mathUtil.multiplyNumberVector(simulationParameters.deltaT / 2, SpaceShip.cartesianVelocity)
+        // )
+        // SpaceShip.spin += SpaceShip.spinIncreasing * SpaceShip.spinChangeRate
+        // SpaceShip.angleRadians += SpaceShip.spin;
     };
 
     setStateFromSimVariables = (addToTime) => {
