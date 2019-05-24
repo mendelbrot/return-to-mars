@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import SimContext from '../sim-helpers/SimContext';
-import ship1 from '../rocket.png'
-import ship2 from '../space-ship.svg'
+import ship from '../images/rocket.png'
 //import '../App.css';
 
 class ViewScreen extends React.Component {
@@ -104,14 +103,7 @@ class ViewScreen extends React.Component {
             <div>
                 <canvas ref='canvas' width={this.width} height={this.width} />
                 <div>
-                    <img ref='ship' src={ship1} style={{display:'none'}} />
-                    {/* <img ref='ship' src={ship2} /> */}
-                    <h1>
-                        {this.context.secondsPerMarsYear}
-                    </h1>
-                    <h2>
-                        {this.context.marsPosition[0]}
-                    </h2>
+                    <img ref='ship' src={ship} style={{display:'none'}} />
                 </div>
             </div>
         );
