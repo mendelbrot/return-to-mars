@@ -130,7 +130,7 @@ class SimEngine extends React.Component {
             MathUtil.multiplyNumberVector(s.deltaT / 2, s.ship.velocity)
         );
     };
-    
+
     setStateFromSimVariables = (addToTime) => {
         this.setState( (state) => { 
             let newT = addToTime ?
@@ -146,7 +146,7 @@ class SimEngine extends React.Component {
                     MathUtil.magnitudeVectorDifference(this.simVariables.mars.velocity, this.simVariables.ship.velocity),
                 timeMarsYears: newT,
                 maxDistance: 
-                    MathUtil.calculateMaxDistance([this.simVariables.ship, this.simVariables.mars]),
+                    MathUtil.calculateMaxDistance([this.simVariables.ship, this.simVariables.mars], 3 * MathUtil.constants.marsSunDistance),
             };      
         }, () => this.stateChangeCallbackList.forEach((f) => f.call() )
         );

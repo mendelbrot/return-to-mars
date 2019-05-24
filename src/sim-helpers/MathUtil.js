@@ -79,8 +79,8 @@ class MathUtil {
         });
     }
 
-    static calculateMaxDistance = (simObjectsList) => {
-        let maxDistance = 0;
+    static calculateMaxDistance = (simObjectsList, min) => {
+        let maxDistance = min;  // min is the minimum output
         simObjectsList.forEach((object) => {
             let distance = this.magnitudeVectorDifference(object.position, [0, 0]);
             if (distance > maxDistance) {
