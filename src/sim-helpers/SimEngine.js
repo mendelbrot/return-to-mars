@@ -37,7 +37,7 @@ class SimEngine extends React.Component {
         }
 
         this.setSecondsPerMarsYear = this.setSecondsPerMarsYear.bind(this);
-        this.addToShipVelocity = this.addToShipVelocity.bind(this);
+        this.addDeltaV = this.addDeltaV.bind(this);
         this.setSpeedTolerance = this.setSpeedTolerance.bind(this);
         this.setDistanceTolerance = this.setDistanceTolerance.bind(this);
         this.pushFunctionToStateChangeCallbackList = this.pushFunctionToStateChangeCallbackList.bind(this);
@@ -164,9 +164,8 @@ class SimEngine extends React.Component {
         this.simVariables.deltaT = secondsPerCalculation * simSecondsPerMarsYear / val;
     };
 
-    addToShipVelocity = (val) => {
-        let newV = MathUtil.vectorSum(val, this.state.shipVelocity);
-        this.setState({ shipVelocity: newV });
+    addDeltaV = (deltaV) => {
+        this.simVariables.ship.velocity = MathUtil.vectorSum(this.simVariables.ship.velocity, deltaV);
     };
 
     setSpeedTolerance = (val) => {
@@ -207,7 +206,7 @@ class SimEngine extends React.Component {
                     setSecondsPerMarsYear: this.setSecondsPerMarsYear,
                     setSpeedTolerance: this.setSpeedTolerance,
                     setDistanceTolerance: this.setDistanceTolerance,
-                    addToShipVelocity: this.addToShipVelocity,
+                    addDeltaV: this.addDeltaV,
                     pushFunctionToStateChangeCallbackList: this.pushFunctionToStateChangeCallbackList,
                 }}
             >
