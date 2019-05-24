@@ -31,11 +31,15 @@ class SimEngine extends React.Component {
             marsShipDistance: null,
             marsShipSpeed: null,
             timeMarsYears: 0,               // the number of times mars has circled the sun on the screen
-            maxDistance: 6 * Math.pow(10, 11)  // the furthest distance fron the sun of any object, for canvas scaling             
+            maxDistance: 6 * Math.pow(10, 11),  // the furthest distance fron the sun of any object, for canvas scaling 
+            speedTolerance: 1.0 * Math.pow(10, 3),    
+            distanceTolerance: 1.0 * Math.pow(10, 10),            
         }
 
         this.setSecondsPerMarsYear = this.setSecondsPerMarsYear.bind(this);
         this.addToShipVelocity = this.addToShipVelocity.bind(this);
+        this.setSpeedTolerance = this.setSpeedTolerance.bind(this);
+        this.setDistanceTolerance = this.setDistanceTolerance.bind(this);
         this.pushFunctionToStateChangeCallbackList = this.pushFunctionToStateChangeCallbackList.bind(this);
         this.playSim = this.playSim.bind(this);
         this.pauseSim = this.pauseSim.bind(this);
@@ -165,6 +169,14 @@ class SimEngine extends React.Component {
         this.setState({ shipVelocity: newV });
     };
 
+    setSpeedTolerance = (val) => {
+        this.setState({ speedTolerance: val });
+    };
+
+    setDistanceTolerance = (val) => {
+        this.setState({ distanceTolerance: val });
+    };
+
     pushFunctionToStateChangeCallbackList = (f) => {
         this.stateChangeCallbackList.push(f);
     };
@@ -185,12 +197,16 @@ class SimEngine extends React.Component {
                     marsShipSpeed: this.state.marsShipSpeed,
                     timeMarsYears: this.state.timeMarsYears,
                     maxDistance: this.state.maxDistance,
+                    speedTolerance: this.state.speedTolerance,
+                    distanceTolerance: this.state.distanceTolerance,
 
                     // setters
                     playSim: this.playSim,
                     pauseSim: this.pauseSim,
                     resetSim: this.resetSim,
                     setSecondsPerMarsYear: this.setSecondsPerMarsYear,
+                    setSpeedTolerance: this.setSpeedTolerance,
+                    setDistanceTolerance: this.setDistanceTolerance,
                     addToShipVelocity: this.addToShipVelocity,
                     pushFunctionToStateChangeCallbackList: this.pushFunctionToStateChangeCallbackList,
                 }}
