@@ -80,6 +80,8 @@ class SimEngine extends React.Component {
 
                 this.setStateFromSimVariables(true);
 
+                this.checkForWinLoose();
+
             }, this.simVariables.millisecondsPerFrame);
         });
 
@@ -163,6 +165,22 @@ class SimEngine extends React.Component {
         }, () => this.stateChangeCallbackList.forEach((f) => f.call() )
         );
     };
+
+    checkForWinLoose = () => {
+
+        if (this.state.timeMarsYears > this.state.timeLimit) {
+            this.pauseSim();
+            window.alert("Life Support has run out.  You didn't make it.")
+            return
+        }
+
+        if ( this.state.marsShipDistance < this.state.distanceTolerance &&
+                this.state.marsShipSpeed < this.state.speedTolerance ) {
+            this.pauseSim();
+            window.alert("Congradulations, Martian.  You made it home.")
+            return
+        }
+    }
 
     setSecondsPerMarsYear = (val) => {
         this.setState({ secondsPerMarsYear: val });
