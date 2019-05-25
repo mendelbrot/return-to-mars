@@ -30,7 +30,7 @@ const SimControls = (props) => {
     }
 
     const handleChange = (evt) => {
-        contextFunctions[evt.target.name](evt.target.value);
+        contextFunctions[evt.target.name](Number(evt.target.value));
     }
 
     return (

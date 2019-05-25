@@ -100,7 +100,7 @@ class SimEngine extends React.Component {
     resetSim = () => {
         this.pauseSim();
         this.setSecondsPerMarsYear(this.state.secondsPerMarsYear);
-        this.setState({ timeMarsYears: 0});
+        this.setState((state) => { return { timeMarsYears: 0, deltaVReserve: state.initialDeltaVReserve}});
 
         let s = this.simVariables;
         let c = MathUtil.constants;

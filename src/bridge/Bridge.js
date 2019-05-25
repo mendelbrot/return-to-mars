@@ -32,7 +32,7 @@ function Bridge(props) {
         <BrLayout>
             <div className='left'>
                 <div className='view'>
-                    <ViewScreen />
+                    <ViewScreen helmData={helmData}/>
                 </div>
                 <div className='helm'>
                     <HelmControls helmData={helmData} />

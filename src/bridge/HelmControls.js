@@ -21,7 +21,7 @@ function HelmControls(props) {
     }
 
     const handleChange = (evt) => {
-        eventFunctions[evt.target.name](evt.target.value);
+        eventFunctions[evt.target.name](Number(evt.target.value));
     }
 
     return (

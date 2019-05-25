@@ -64,7 +64,7 @@ class ViewScreen extends React.Component {
 
         // draw sun
         this.ctx.beginPath();
-        this.ctx.arc(0, 0, 25, 0, 2 * Math.PI);
+        this.ctx.arc(0, 0, this.rescale(0.7 * Math.pow(10, 11)), 0, 2 * Math.PI);
         this.ctx.fillStyle = 'yellow';
         this.ctx.fill();
         this.ctx.strokeStyle = 'orange';
@@ -75,7 +75,7 @@ class ViewScreen extends React.Component {
         let marsX = this.rescale(this.context.marsPosition[0]);
         let marsY = this.rescale(this.context.marsPosition[1]);
         this.ctx.beginPath();
-        this.ctx.arc(marsX, marsY, 15, 0, 2 * Math.PI);
+        this.ctx.arc(marsX, marsY, this.rescale(0.5 * Math.pow(10, 11)), 0, 2 * Math.PI);
         this.ctx.fillStyle = 'firebrick';
         this.ctx.fill();
         this.ctx.strokeStyle = 'lightseagreen';
@@ -86,7 +86,12 @@ class ViewScreen extends React.Component {
         let shipX = this.rescale(this.context.shipPosition[0]);
         let shipY = this.rescale(this.context.shipPosition[1]);
         let shipWidth = 40;
-        this.ctx.drawImage(this.ship, shipX - shipWidth / 2, shipY - shipWidth / 2, shipWidth, shipWidth)
+        this.ctx.save();
+        this.ctx.translate(shipX, shipY);
+        this.ctx.rotate(this.props.helmData.theta + Math.PI / 2);
+        console.log(this.props.helmData.theta + Math.PI / 2);
+        this.ctx.drawImage(this.ship, -shipWidth / 2, -shipWidth / 2, shipWidth, shipWidth)
+        this.ctx.restore();
         // if the ship image isn't avaliable yet, call this function back when it is
         this.ship.onload = this.drawShip;
     }
