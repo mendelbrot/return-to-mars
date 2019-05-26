@@ -6,7 +6,29 @@ import SimContext from '../sim-helpers/SimContext';
 
 
 const Helm = styled(PanelBox)`
-    min-width: 100px;
+
+    .control-label {
+        color: white;
+        font-size: 0.7em
+    }
+
+    .guage {
+        color: darkblue;
+        background-color: orange;
+        font-size: 0.9em;
+        font-weight: bold;
+        margin: 10px 0px 10px 0px;
+        padding: 5px 10px 5px 10px;
+    }
+
+    .controls {
+        display: flex;
+    }
+
+    .delta-v, .theta {
+        width: 100px;
+        margin-right: 10px;
+    }
 `
 
 function HelmControls(props) {
@@ -30,23 +52,39 @@ function HelmControls(props) {
 
     return (
         <Helm>
-            <Input
-                name='setDeltaV'
-                value={eventFunctions.getDeltaV()}
-                min={0} max={100} type="number" step="0.1"
-                onChange={handleChange}
-            />
-            <Input
-                name='setTheta'
-                value={eventFunctions.getTheta()}
-                min={0} max={360} type="number" step="1"
-                onChange={handleChange}
-            />
-            <Button onClick={() => context.addDeltaV([props.helmData.deltaV, props.helmData.theta])}>Fire</Button>
-            <br/>
-            <span>initial deltaV reserve: {Math.round(context.initialDeltaVReserve / 100) / 10} </span>
-            <br/>
-            <span>current deltaV reserve: {Math.round(context.deltaVReserve / 100) / 10} </span>
+            <div className='controls'>
+                <div className='delta-v'>
+                    <span className='control-label'>Delta V (Km/s)</span>
+                    <Input
+                        name='setDeltaV'
+                        value={eventFunctions.getDeltaV()}
+                        min={0} max={100} type="number" step="0.1"
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className='theta'>
+                    <span className='control-label'>Angle (Degrees)</span>
+                    <Input
+                        name='setTheta'
+                        value={eventFunctions.getTheta()}
+                        min={0} max={360} type="number" step="1"
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <span className='control-label'> </span><br/>
+                    <Button 
+                        color='danger' 
+                        onClick={() => context.addDeltaV([props.helmData.deltaV, props.helmData.theta])}>
+                            Fire
+                    </Button>
+                </div>
+            </div>
+            <div className='guage'>
+                <span>Initial Reserve: {Math.round(context.initialDeltaVReserve / 100) / 10} </span>
+                <br />
+                <span>Current Reserve: {Math.round(context.deltaVReserve / 100) / 10} </span>
+            </div>
         </Helm>
     );
 }

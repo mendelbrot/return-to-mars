@@ -107,7 +107,7 @@ class ViewScreen extends React.Component {
             <div>
                 <canvas ref='canvas' width={this.width} height={this.width} />
                 <div>
-                    <img ref='ship' src={ship} style={{display:'none'}} />
+                    <img ref='ship' src={ship} alt='ship' style={{display:'none'}} />
                 </div>
             </div>
         );
