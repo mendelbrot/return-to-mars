@@ -63,21 +63,40 @@ const SimControls = (props) => {
 
     const context = useContext(SimContext);
 
-    const contextFunctions = {
+    const eventFunctions = {
 
-        speed: (val) => {
+        getSpeed: () => {
+            return context.secondsPerMarsYear
+        },
+        setSpeed: (val) => {
             context.setSecondsPerMarsYear(val);
         },
-        distanceTolerance: (val) => {
-            context.setDistanceTolerance(val);
+
+        getDistanceTolerance: () => {
+            return context.distanceTolerance / 1000000000;
         },
-        speedTolerance: (val) => {
-            context.setSpeedTolerance(val);
+        setDistanceTolerance: (val) => {
+            context.setDistanceTolerance(val * 1000000000);
         },
-        initialDeltaVReserve: (val) => {
-            context.setInitialDeltaVReserve(val);
+
+        getSpeedTolerance: () => {
+            return context.speedTolerance / 1000;
         },
-        timeLimit: (val) => {
+        setSpeedTolerance: (val) => {
+            context.setSpeedTolerance(val * 1000);
+        },
+
+        getInitialDeltaVReserve: () => {
+            return context.initialDeltaVReserve / 1000;
+        },
+        setInitialDeltaVReserve: (val) => {
+            context.setInitialDeltaVReserve(val * 1000);
+        },
+
+        getTimeLimit: () => {
+            return context.timeLimit;
+        },
+        setTimeLimit: (val) => {
             context.setTimeLimit(val);
         },
 
@@ -85,7 +104,7 @@ const SimControls = (props) => {
     }
 
     const handleChange = (evt) => {
-        contextFunctions[evt.target.name](Number(evt.target.value));
+        eventFunctions[evt.target.name](Number(evt.target.value));
     }
 
     return (
@@ -97,8 +116,8 @@ const SimControls = (props) => {
                 <div className='play-controls'>
                     <div className='speed'>
                         <Input
-                            name='speed'
-                            value={context.secondsPerMarsYear}
+                            name='setSpeed'
+                            value={eventFunctions.getSpeed()}
                             min={1} max={60} type="number" step="1"
                             onChange={handleChange}
                         />
@@ -116,37 +135,37 @@ const SimControls = (props) => {
                 <div className='settings-form'>
                     <Form>
                         <FormGroup>
-                            <Label>Distance Tolerance</Label>
+                            <Label>Distance Tolerance (Million Km)</Label>
                             <Input
-                                name='distanceTolerance'
-                                value={context.distanceTolerance}
-                                min={0} type="number" step="1000000000"
+                                name='setDistanceTolerance'
+                                value={eventFunctions.getDistanceTolerance()}
+                                min={0} type="number" step="1"
                                 onChange={handleChange}
                             />
                         </FormGroup>
                         <FormGroup>
-                            <Label>Speed Tolerance</Label>
+                            <Label>Speed Tolerance (Km/s)</Label>
                             <Input
-                                name='speedTolerance'
-                                value={context.speedTolerance}
-                                min={0} type="number" step="100"
+                                name='setSpeedTolerance'
+                                value={eventFunctions.getSpeedTolerance()}
+                                min={0} type="number" step="1"
                                 onChange={handleChange}
                             />
                         </FormGroup>
                         <FormGroup>
-                            <Label>Initial Reserve</Label>
+                            <Label>Initial Reserve (km/s)</Label>
                             <Input
-                                name='initialDeltaVReserve'
-                                value={context.initialDeltaVReserve}
-                                min={0} type="number" step="1000000"
+                                name='setInitialDeltaVReserve'
+                                value={eventFunctions.getInitialDeltaVReserve()}
+                                min={0} type="number" step="0.1"
                                 onChange={handleChange}
                             />
                         </FormGroup>
                         <FormGroup>
-                            <Label>Time Limit</Label>
+                            <Label>Time Limit (Martian Years)</Label>
                             <Input
-                                name='timeLimit'
-                                value={context.timeLimit}
+                                name='setTimeLimit'
+                                value={eventFunctions.getTimeLimit()}
                                 min={0} type="number" step="1"
                                 onChange={handleChange}
                             />

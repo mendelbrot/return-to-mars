@@ -3,15 +3,15 @@ import SimContext from './SimContext';
 import MathUtil from './MathUtil';
 
 const defaultValues = {
-    secondsPerMarsYear: 10,             // the number of seconds it takes mars to circle the sun on the screen
-    speedTolerance: 1.0 * Math.pow(10, 3),
-    distanceTolerance: 1.0 * Math.pow(10, 10),
-    timeLimit: 5,
-    initialDeltaVReserve: 100000,
-    helmDeltaVpreset: 10000,
-    helmAnglePreset: 1.6,
-    initialShipPosition: MathUtil.multiplyNumberVector(1, MathUtil.convertPolarToCartesian([MathUtil.constants.marsSunDistance, 1.6])),
-    initialShipVelocity: MathUtil.multiplyNumberVector(1.3, MathUtil.convertPolarVelocityToCartesian([0, MathUtil.constants.marsAngularSpeed], [MathUtil.constants.marsSunDistance, 1.6])),
+    secondsPerMarsYear: 6,             // the number of seconds it takes mars to circle the sun on the screen
+    speedTolerance: 10.0 * Math.pow(10, 3),
+    distanceTolerance: 5.0 * Math.pow(10, 10),
+    timeLimit: 10,
+    initialDeltaVReserve: 500000,
+    helmDeltaVpreset: 15000,
+    helmAnglePreset: 1/2*Math.PI,
+    initialShipPosition: MathUtil.multiplyNumberVector(2, MathUtil.convertPolarToCartesian([MathUtil.constants.marsSunDistance, Math.PI])),
+    initialShipVelocity: MathUtil.multiplyNumberVector(0.5, MathUtil.convertPolarVelocityToCartesian([0, MathUtil.constants.marsAngularSpeed], [MathUtil.constants.marsSunDistance, Math.PI])),
 }
 
 class SimEngine extends React.Component {
