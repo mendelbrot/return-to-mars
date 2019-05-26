@@ -65,7 +65,7 @@ function RelativePlot(props) {
                 >
                     <VictoryLine
                         style={{
-                            data: { stroke: "black" }
+                            data: { stroke: "blue" }
                         }}
                         data={valData}
                     />

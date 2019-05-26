@@ -5,7 +5,7 @@ import MathUtil from './MathUtil';
 const defaultValues = {
     secondsPerMarsYear: 6,             // the number of seconds it takes mars to circle the sun on the screen
     speedTolerance: 10.0 * Math.pow(10, 3),
-    distanceTolerance: 5.0 * Math.pow(10, 10),
+    distanceTolerance: 10.0 * Math.pow(10, 10),
     timeLimit: 10,
     initialDeltaVReserve: 500000,
     helmDeltaVpreset: 15000,
