@@ -89,7 +89,6 @@ class ViewScreen extends React.Component {
         this.ctx.save();
         this.ctx.translate(shipX, shipY);
         this.ctx.rotate(this.props.helmData.theta + Math.PI / 2);
-        console.log(this.props.helmData.theta + Math.PI / 2);
         this.ctx.drawImage(this.ship, -shipWidth / 2, -shipWidth / 2, shipWidth, shipWidth)
         this.ctx.restore();
         // if the ship image isn't avaliable yet, call this function back when it is

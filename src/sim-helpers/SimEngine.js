@@ -2,6 +2,17 @@ import React from 'react';
 import SimContext from './SimContext';
 import MathUtil from './MathUtil';
 
+const defaultValues = {
+    secondsPerMarsYear: 10,             // the number of seconds it takes mars to circle the sun on the screen
+    speedTolerance: 1.0 * Math.pow(10, 3),
+    distanceTolerance: 1.0 * Math.pow(10, 10),
+    timeLimit: 5,
+    initialDeltaVReserve: 100000,
+    helmDeltaVpreset: 10000,
+    helmAnglePreset: 1.6,
+    initialShipPosition: MathUtil.multiplyNumberVector(1, MathUtil.convertPolarToCartesian([MathUtil.constants.marsSunDistance, 1.6])),
+    initialShipVelocity: MathUtil.multiplyNumberVector(1.3, MathUtil.convertPolarVelocityToCartesian([0, MathUtil.constants.marsAngularSpeed], [MathUtil.constants.marsSunDistance, 1.6])),
+}
 
 class SimEngine extends React.Component {
 
@@ -23,21 +34,25 @@ class SimEngine extends React.Component {
         super(props);
 
         this.state = {
-            playing: false,
-            secondsPerMarsYear: 12,         // the number of seconds it takes mars to circle the sun on the screen
+            playing: false,   
             marsPosition: [null, null],
             shipPosition: [null, null],
             shipVelocity: [null, null],
             marsShipDistance: null,
             marsShipSpeed: null,
-            timeMarsYears: 0,               // the number of times mars has circled the sun on the screen
-            maxDistance: 6 * Math.pow(10, 11),  // the furthest distance fron the sun of any object, for canvas scaling 
-            speedTolerance: 1.0 * Math.pow(10, 3),    
-            distanceTolerance: 1.0 * Math.pow(10, 10), 
-            initialDeltaVReserve: 10000,
-            deltaVReserve: 10000,
-            timeLimit: 5,        
-        }
+            timeMarsYears: null,
+            deltaVReserve: null,
+            maxDistance: null,  // the furthest distance from the sun of any object, for canvas scaling 
+            secondsPerMarsYear: defaultValues.secondsPerMarsYear,
+            speedTolerance: defaultValues.speedTolerance,  
+            distanceTolerance: defaultValues.distanceTolerance,
+            initialDeltaVReserve: defaultValues.initialDeltaVReserve,
+            timeLimit: defaultValues.timeLimit,
+            helmDeltaVPreset: defaultValues.helmDeltaVpreset,
+            helmAnglePreset: defaultValues.helmAnglePreset,
+            initialShipPosition: defaultValues.initialShipPosition,
+            initialShipVelocity: defaultValues.initialShipVelocity,     
+        };
 
         this.setSecondsPerMarsYear = this.setSecondsPerMarsYear.bind(this);
         this.addDeltaV = this.addDeltaV.bind(this);
@@ -46,11 +61,14 @@ class SimEngine extends React.Component {
         this.setInitialDeltaVReserve = this.setInitialDeltaVReserve.bind(this);
         this.setDeltaVReserve = this.setDeltaVReserve.bind(this);
         this.setTimeLimit = this.setTimeLimit.bind(this);
-        
+        this.setHelmDeltaVPreset = this.setHelmDeltaVPreset.bind(this);
+        this.setHelmAnglePreset = this.setHelmAnglePreset.bind(this);
+        this.setInitialShipPosition = this.setInitialShipPosition.bind(this);
+        this.setInitialShipVelocity = this.setInitialShipVelocity.bind(this);
         this.playSim = this.playSim.bind(this);
         this.pauseSim = this.pauseSim.bind(this);
         this.resetSim = this.resetSim.bind(this);
-
+        this.restoreDefaultValues = this.restoreDefaultValues.bind(this);
         this.pushFunctionToStateChangeCallbackList = this.pushFunctionToStateChangeCallbackList.bind(this);
     }
 
@@ -105,6 +123,7 @@ class SimEngine extends React.Component {
         let s = this.simVariables;
         let c = MathUtil.constants;
 
+        // set values for the planets
         s.sun.mass = c.sunMass;
         s.mars.mass = c.marsMass;
         s.mars.position = 
@@ -113,8 +132,10 @@ class SimEngine extends React.Component {
             MathUtil.convertPolarVelocityToCartesian([0, c.marsAngularSpeed], [c.marsSunDistance, 0]);
         s.mars.r = c.marsSunDistance; //adding r, theta to mars to facilitate calculationg circular motion
         s.mars.theta = 0;
-        s.ship.position = MathUtil.multiplyNumberVector(2, s.mars.position);
-        s.ship.velocity = MathUtil.multiplyNumberVector(0.5, s.mars.velocity);
+
+        // set the ship values
+        s.ship.position = defaultValues.initialShipPosition;
+        s.ship.velocity = defaultValues.initialShipVelocity;
 
         this.setStateFromSimVariables();
     };
@@ -182,6 +203,21 @@ class SimEngine extends React.Component {
         }
     }
 
+    restoreDefaultValues = () => {
+
+        this.setState({
+            secondsPerMarsYear: defaultValues.secondsPerMarsYear,
+            speedTolerance: defaultValues.speedTolerance,
+            distanceTolerance: defaultValues.distanceTolerance,
+            initialDeltaVReserve: defaultValues.initialDeltaVReserve,
+            timeLimit: defaultValues.timeLimit,
+            helmDeltaVPreset: defaultValues.helmDeltaVpreset,
+            helmAnglePreset: defaultValues.helmAnglePreset,
+            initialShipPosition: defaultValues.initialShipPosition,
+            initialShipVelocity: defaultValues.initialShipVelocity,   
+        })
+    }
+
     setSecondsPerMarsYear = (val) => {
         this.setState({ secondsPerMarsYear: val });
         let secondsPerCalculation = this.simVariables.millisecondsPerFrame / 1000 / this.simVariables.calculationsPerFrame;
@@ -194,7 +230,7 @@ class SimEngine extends React.Component {
     addDeltaV = (deltaV) => {
 
         // don't do anything if there's no propellent left
-        if (this.state.deltaVReserve == 0) {
+        if (this.state.deltaVReserve === 0) {
             return
         }
 
@@ -233,6 +269,22 @@ class SimEngine extends React.Component {
         this.setState({ timeLimit: val });
     };
 
+    setHelmDeltaVPreset = (val) => {
+        this.setState({ helmDeltaVPreset: val });
+    };
+
+    setHelmAnglePreset = (val) => {
+        this.setState({ helmAnglePreset: val });
+    };
+
+    setInitialShipPosition = (val) => {
+        this.setState({ initialShipPosition: val });
+    };
+
+    setInitialShipVelocity = (val) => {
+        this.setState({ initialShipVelocity: val });
+    };
+
     pushFunctionToStateChangeCallbackList = (f) => {
         this.stateChangeCallbackList.push(f);
     };
@@ -242,22 +294,23 @@ class SimEngine extends React.Component {
             <SimContext.Provider
                 value={{
                     playing: this.state.playing,
-                    secondsPerMarsYear: this.state.secondsPerMarsYear,
-                    calculationsPerFrame: this.state.calculationsPerFrame,
-                    millisecondsPerFrame: this.state.millisecondsPerFrame,
-                    deltaT: this.state.deltaT,
                     marsPosition: this.state.marsPosition,
                     shipPosition: this.state.shipPosition,
                     shipVelocity: this.state.shipVelocity,
                     marsShipDistance: this.state.marsShipDistance,
                     marsShipSpeed: this.state.marsShipSpeed,
                     timeMarsYears: this.state.timeMarsYears,
+                    deltaVReserve: this.state.deltaVReserve,
                     maxDistance: this.state.maxDistance,
+                    secondsPerMarsYear: this.state.secondsPerMarsYear,
                     speedTolerance: this.state.speedTolerance,
                     distanceTolerance: this.state.distanceTolerance,
                     initialDeltaVReserve: this.state.initialDeltaVReserve,
-                    deltaVReserve: this.state.deltaVReserve,
-                    timeLimit: this.state.timeLimit,      
+                    timeLimit: this.state.timeLimit,  
+                    helmDeltaVPreset: this.state.helmDeltaVPreset,  
+                    helmAnglePreset: this.state.helmAnglePreset,  
+                    initialShipPosition: this.state.initialShipPosition,  
+                    initialShipVelocity: this.state.initialShipVelocity,       
 
                     // setters
                     playSim: this.playSim,
@@ -270,6 +323,11 @@ class SimEngine extends React.Component {
                     setDeltaVReserve: this.setDeltaVReserve,
                     setTimeLimit: this.setTimeLimit,
                     addDeltaV: this.addDeltaV,
+                    setHelmDeltaVPreset: this.setHelmDeltaVPreset,
+                    setHelmAnglePreset: this.setHelmAnglePreset,
+                    setInitialShipPosition: this.setInitialShipPosition,
+                    setInitialShipVelocity: this.setInitialShipVelocity,
+                    restoreDefaultValues: this.restoreDefaultValues,
                     pushFunctionToStateChangeCallbackList: this.pushFunctionToStateChangeCallbackList,
                 }}
             >

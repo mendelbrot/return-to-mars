@@ -82,6 +82,8 @@ const SimControls = (props) => {
                     min={0} type="number" step="1"
                     onChange={handleChange}
                 />
+                <br />
+                <Button onClick={context.restoreDefaultValues}>Restore Default Settings</Button>
             </div>
         </div>
 
