@@ -28,13 +28,16 @@ class SimEngine extends React.Component {
         deltaT: 2000,                   // the number of simulation seconds per calculation
     }
 
+    marsYearsPerFrame = () => MathUtil.constants.marsAngularSpeed * this.simVariables.deltaT * this.simVariables.calculationsPerFrame / 2 /Math.PI
+
     stateChangeCallbackList = [];
+    resetCallbackList = [];
 
     constructor(props) {
         super(props);
 
         this.state = {
-            playing: false,   
+            playing: false,  
             marsPosition: [null, null],
             shipPosition: [null, null],
             shipVelocity: [null, null],
@@ -70,6 +73,7 @@ class SimEngine extends React.Component {
         this.resetSim = this.resetSim.bind(this);
         this.restoreDefaultValues = this.restoreDefaultValues.bind(this);
         this.pushFunctionToStateChangeCallbackList = this.pushFunctionToStateChangeCallbackList.bind(this);
+        this.pushFunctionToResetCallbackList = this.pushFunctionToResetCallbackList.bind(this);
     }
 
     componentDidMount() {
@@ -83,7 +87,7 @@ class SimEngine extends React.Component {
             return;
         };
 
-        this.setState({ playing: true }, () => {
+        this.setState({ hasReset: false, playing: true }, () => {
             var interval = setInterval(() => {
 
                 // pause if state.playing has been set to false
@@ -118,7 +122,6 @@ class SimEngine extends React.Component {
     resetSim = () => {
         this.pauseSim();
         this.setSecondsPerMarsYear(this.state.secondsPerMarsYear);
-        this.setState((state) => { return { timeMarsYears: 0, deltaVReserve: state.initialDeltaVReserve}});
 
         let s = this.simVariables;
         let c = MathUtil.constants;
@@ -138,6 +141,11 @@ class SimEngine extends React.Component {
         s.ship.velocity = defaultValues.initialShipVelocity;
 
         this.setStateFromSimVariables();
+
+        this.setState((state) => { return { 
+            timeMarsYears: 0, 
+            deltaVReserve: state.initialDeltaVReserve,
+        }}, this.resetCallbackList.forEach((f) => f.call()) );
     };
 
     calcNextState = () => {
@@ -169,7 +177,7 @@ class SimEngine extends React.Component {
         this.setState( (state) => { 
             let newT = addToTime ?  // update the time, in mars years
                 state.timeMarsYears 
-                    + MathUtil.constants.marsAngularSpeed * this.simVariables.deltaT * this.simVariables.calculationsPerFrame / 2 /Math.PI :
+                    + this.marsYearsPerFrame() :
                 state.timeMarsYears;
             return {
                 marsPosition: this.simVariables.mars.position,
@@ -289,6 +297,10 @@ class SimEngine extends React.Component {
         this.stateChangeCallbackList.push(f);
     };
 
+    pushFunctionToResetCallbackList = (f) => {
+        this.resetCallbackList.push(f);
+    };
+
     render() {
         return (
             <SimContext.Provider
@@ -310,7 +322,8 @@ class SimEngine extends React.Component {
                     helmDeltaVPreset: this.state.helmDeltaVPreset,  
                     helmAnglePreset: this.state.helmAnglePreset,  
                     initialShipPosition: this.state.initialShipPosition,  
-                    initialShipVelocity: this.state.initialShipVelocity,       
+                    initialShipVelocity: this.state.initialShipVelocity, 
+                    marsYearsPerFrame: this.marsYearsPerFrame,   //must be called() 
 
                     // setters
                     playSim: this.playSim,
@@ -329,6 +342,7 @@ class SimEngine extends React.Component {
                     setInitialShipVelocity: this.setInitialShipVelocity,
                     restoreDefaultValues: this.restoreDefaultValues,
                     pushFunctionToStateChangeCallbackList: this.pushFunctionToStateChangeCallbackList,
+                    pushFunctionToResetCallbackList: this.pushFunctionToResetCallbackList,
                 }}
             >
                 {this.props.children}

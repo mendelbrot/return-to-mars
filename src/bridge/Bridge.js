@@ -28,6 +28,17 @@ function Bridge(props) {
 
     const [deltaV, setDeltaV] = useState(context.helmDeltaVPreset);
     const [theta, setTheta] = useState(context.helmAnglePreset);
+    const [hasPushedReset, setHasPushedReset] = useState(false);
+
+    var reset = () => {
+        setDeltaV(context.helmDeltaVPreset)
+        setTheta(context.helmAnglePreset)
+    }
+
+    if (!hasPushedReset) {
+        context.pushFunctionToResetCallbackList(reset);
+        setHasPushedReset(true);
+    }
 
     const helmData = {
         deltaV: deltaV,

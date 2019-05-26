@@ -35,6 +35,7 @@ function HelmControls(props) {
 
     const context = useContext(SimContext);
 
+
     const eventFunctions = {
 
         getDeltaV: () => Math.round(props.helmData.deltaV / 100) /10,
@@ -46,8 +47,6 @@ function HelmControls(props) {
 
     const handleChange = (evt) => {
         eventFunctions[evt.target.name](Number(evt.target.value));
-        console.log(eventFunctions.getTheta())
-        console.log(props.helmData.theta)
     }
 
     return (

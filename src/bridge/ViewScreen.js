@@ -24,7 +24,7 @@ class ViewScreen extends React.Component {
 
     componentDidMount = () => {
 
-        this.context.pushFunctionToStateChangeCallbackList(this.simEngineStateChangeCallback)
+        this.context.pushFunctionToStateChangeCallbackList(this.simEngineStateChangeCallback);
 
         this.initializeCanvas();
 

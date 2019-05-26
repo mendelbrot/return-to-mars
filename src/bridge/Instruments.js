@@ -28,16 +28,22 @@ function Instruments() {
             <div className='plot'>
                 <span>Distance</span>
                 <RelativePlot 
-                    x={context.marsShipDistance} 
-                    y={context.timeMarsYears} 
-                    tol={context.distanceTolerance}/>
+                    reset={context.hasReset}
+                    x={context.timeMarsYears} 
+                    dx={context.marsYearsPerFrame()}
+                    n={50}
+                    y={context.marsShipDistance / 1000000000} 
+                    tol={context.distanceTolerance / 1000000000}/>
             </div>
             <div className='plot last'>
                 <span>Speed</span>
                 <RelativePlot 
-                    x={context.marsShipSpeed} 
-                    y={context.timeMarsYears} 
-                    tol={context.speedTolerance}/>
+                    reset={context.hasReset}
+                    x={context.timeMarsYears} 
+                    dx={context.marsYearsPerFrame()}
+                    n={50}
+                    y={context.marsShipSpeed / 1000} 
+                    tol={context.speedTolerance / 1000}/>
             </div>
         </Inst>
     );
