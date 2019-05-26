@@ -14,18 +14,14 @@ function Bridge(props) {
 
     const context  = useContext(SimContext);
 
-    const [deltaV, setDeltaV] = useState(1000);
-    const [theta, setTheta] = useState(1.6);
-    const [deltaVReserve, setDeltaVReserve] = useState(context.initialDeltaVReserve);
+    const [deltaV, setDeltaV] = useState(context.helmDeltaVPreset);
+    const [theta, setTheta] = useState(context.helmAnglePreset);
 
     const helmData = {
         deltaV: deltaV,
         setDeltaV: setDeltaV,
         theta: theta,
         setTheta: setTheta,
-        deltaVReserve: deltaVReserve,
-        setDeltaVReserve: setDeltaVReserve,
-        initialDeltaVReserve: context.initialDeltaVReserve
     }
     
     return (

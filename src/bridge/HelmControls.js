@@ -15,34 +15,38 @@ function HelmControls(props) {
 
     const eventFunctions = {
 
-        deltaV: props.helmData.setDeltaV,
-        theta: props.helmData.setTheta,
+        getDeltaV: () => Math.round(props.helmData.deltaV / 100) /10,
+        setDeltaV: (deltaV) => props.helmData.setDeltaV(deltaV * 1000),
+        getTheta: () => Math.round(180 / Math.PI * props.helmData.theta),
+        setTheta: (theta) => props.helmData.setTheta(Math.PI / 180 * theta),
 
     }
 
     const handleChange = (evt) => {
         eventFunctions[evt.target.name](Number(evt.target.value));
+        console.log(eventFunctions.getTheta())
+        console.log(props.helmData.theta)
     }
 
     return (
         <Helm>
             <Input
-                name='deltaV'
-                value={props.helmData.deltaV}
-                min={0} max={100000} type="number" step="1000"
+                name='setDeltaV'
+                value={eventFunctions.getDeltaV()}
+                min={0} max={100} type="number" step="0.1"
                 onChange={handleChange}
             />
             <Input
-                name='theta'
-                value={props.helmData.theta}
-                min={0} max={6.2} type="number" step="0.1"
+                name='setTheta'
+                value={eventFunctions.getTheta()}
+                min={0} max={360} type="number" step="1"
                 onChange={handleChange}
             />
             <Button onClick={() => context.addDeltaV([props.helmData.deltaV, props.helmData.theta])}>Fire</Button>
             <br/>
-            <span>initial deltaV reserve: {context.initialDeltaVReserve} </span>
+            <span>initial deltaV reserve: {Math.round(context.initialDeltaVReserve / 100) / 10} </span>
             <br/>
-            <span>current deltaV reserve: {context.deltaVReserve} </span>
+            <span>current deltaV reserve: {Math.round(context.deltaVReserve / 100) / 10} </span>
         </Helm>
     );
 }
