@@ -8,6 +8,18 @@ import SimContext from '../sim-helpers/SimContext';
 
 const BrLayout = styled.div`
     display: flex;
+
+    .view{
+        padding: 20px;
+    }
+
+    .helm{
+        padding: 0px 20px 20px 20px;
+    }
+
+    .inst{
+        padding: 20px 2px 20px 0px;
+    }
 `
 
 function Bridge(props) {
