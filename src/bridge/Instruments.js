@@ -7,6 +7,11 @@ import SimContext from '../sim-helpers/SimContext';
 
 const Inst = styled(PanelBox)`
 
+    h2 {
+            font-size: 1.5em;
+            color: white;
+        }
+
     .plot {
         margin-bottom: 10px;
         padding: 10px;
@@ -25,24 +30,27 @@ function Instruments() {
 
     return (
         <Inst>
+            <h2>Distance</h2>
             <div className='plot'>
-                <span>Distance</span>
+                
                 <RelativePlot 
                     reset={context.hasReset}
                     x={context.timeMarsYears} 
-                    dx={context.marsYearsPerFrame()}
+                    xLabel='Time (Martian Years)'
                     n={50}
                     y={context.marsShipDistance / 1000000000} 
+                    yLabel='Distance (Million Km)'
                     tol={context.distanceTolerance / 1000000000}/>
             </div>
+            <h2>Speed</h2>
             <div className='plot last'>
-                <span>Speed</span>
                 <RelativePlot 
                     reset={context.hasReset}
                     x={context.timeMarsYears} 
-                    dx={context.marsYearsPerFrame()}
+                    xLabel='Time (Martian Years)'
                     n={50}
                     y={context.marsShipSpeed / 1000} 
+                    yLabel='Speed (Km/s)'
                     tol={context.speedTolerance / 1000}/>
             </div>
         </Inst>

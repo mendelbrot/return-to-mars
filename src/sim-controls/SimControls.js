@@ -36,6 +36,10 @@ const SinCon = styled.div`
                 width: 70px;
             }
         }
+
+        .intro {
+            padding: 10px 10px 0px 10px;
+        }
     }
 
     .bottom {
@@ -47,7 +51,7 @@ const SinCon = styled.div`
             padding: 0px 10px 0px 10px;
 
             h2 {
-                font-size: 1.5em
+                font-size: 1.5em;
             }
         }
 
@@ -125,6 +129,13 @@ const SimControls = (props) => {
                     <Button color='success' onClick={context.playSim}>Play</Button>
                     <Button color='success' onClick={context.pauseSim}>Pause</Button>
                     <Button color='info' onClick={context.resetSim}>Reset</Button>
+                </div>
+                <div className='intro'>
+                    <p>
+                        You are piloting a space ship that was on a mission beyond the orbit of Mars 
+                        when a collision with a micro-asteroid permanently disabled your comm and main navigation computer.  
+                        To survive, you will need to pilot your ship back to Mars before life support runs out.  
+                    </p>
                 </div>
             </div>
 

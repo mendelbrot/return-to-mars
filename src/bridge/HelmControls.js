@@ -7,6 +7,9 @@ import SimContext from '../sim-helpers/SimContext';
 
 const Helm = styled(PanelBox)`
 
+    padding-left: 20px;
+    padding-right: 20px;
+
     .control-label {
         color: white;
         font-size: 0.7em
@@ -17,12 +20,12 @@ const Helm = styled(PanelBox)`
     }
 
     .delta-v{
-        width: 80px;
+        width: 72px;
         margin-right: 10px;
     }
 
     .theta {
-        width: 70px;
+        width: 72px;
         margin-right: 10px;
     }
 
@@ -98,12 +101,12 @@ function HelmControls(props) {
                     <Input
                         name='setDeltaV'
                         value={eventFunctions.getDeltaV()}
-                        min={0} type="number" step="0.1"
+                        min={0} type="number" step="1"
                         onChange={handleChange}
                     />
                 </div>
                 <div className='theta'>
-                    <span className='control-label'>Angle</span>
+                    <span className='control-label'>Angle (&deg;)</span>
                     <Input
                         name='setTheta'
                         value={eventFunctions.getTheta()}

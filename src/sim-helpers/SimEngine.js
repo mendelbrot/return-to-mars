@@ -7,7 +7,7 @@ const defaultValues = {
     speedTolerance: 10.0 * Math.pow(10, 3),
     distanceTolerance: 10.0 * Math.pow(10, 10),
     timeLimit: 10,
-    initialDeltaVReserve: 500000,
+    initialDeltaVReserve: 100000,
     helmDeltaVpreset: 15000,
     helmAnglePreset: 1/2*Math.PI,
     initialShipPosition: MathUtil.multiplyNumberVector(2, MathUtil.convertPolarToCartesian([MathUtil.constants.marsSunDistance, Math.PI])),
@@ -206,7 +206,7 @@ class SimEngine extends React.Component {
         if ( this.state.marsShipDistance < this.state.distanceTolerance &&
                 this.state.marsShipSpeed < this.state.speedTolerance ) {
             this.pauseSim();
-            window.alert("Congradulations, Martian.  You made it home.")
+            window.alert("Congratulations, Martian.  You made it home.")
             return
         }
     }
