@@ -6,5 +6,5 @@ export const PanelBox = styled.div`
     min-height: 100px;
     background-color: grey;
     border-radius: 20px;
-    padding: 10px;
+    padding: 20px;
 `

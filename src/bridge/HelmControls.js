@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { PanelBox } from '../SharedStyles';
 import { Input, Button } from 'reactstrap'
 import SimContext from '../sim-helpers/SimContext';
+import HeadingControl from './HeadingControl';
 
 
 const Helm = styled(PanelBox)`
@@ -15,7 +16,7 @@ const Helm = styled(PanelBox)`
         font-size: 0.7em
     }
 
-    .controls {
+    .topgroup, .topgroup-right {
         display: flex;
     }
 
@@ -26,10 +27,6 @@ const Helm = styled(PanelBox)`
 
     .theta {
         width: 72px;
-        margin-right: 10px;
-    }
-
-    .fire {
         margin-right: 10px;
     }
 
@@ -44,12 +41,13 @@ const Guage = styled.div`
     height: 38px;
 
     .reserve {
-        background-color: blue;
+        background-color: darkblue;
         flex: ${props => props.reserve || 1};
     }
 
     .setting {
-        background-color: red;
+        background-color: blue;
+        border: solid 2px MediumVioletRed;
         flex: ${props => props.setting || 1};
     }
 
@@ -93,47 +91,53 @@ function HelmControls(props) {
     }
     var depleted = eventFunctions.getInitialDeltaVReserve() - eventFunctions.getDeltaVReserve();
 
+    const helmControWidth = 180;
+
     return (
         <Helm>
-            <div className='controls'>
-                <div className='delta-v'>
-                    <span className='control-label'>Delta V (Km/s)</span>
-                    <Input
-                        name='setDeltaV'
-                        value={eventFunctions.getDeltaV()}
-                        min={0} type="number" step="1"
-                        onChange={handleChange}
-                    />
+            <div className='topgroup'>
+                <HeadingControl 
+                    helmData={props.helmData}
+                    width={helmControWidth}/>
+                <div className='topgroup-right'>
+                    <div className='delta-v'>
+                        <span className='control-label'>Delta V (Km/s)</span>
+                        <Input
+                            name='setDeltaV'
+                            value={eventFunctions.getDeltaV()}
+                            min={0} type="number" step="1"
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className='theta'>
+                        <span className='control-label'>Angle (&deg;)</span>
+                        <Input
+                            name='setTheta'
+                            value={eventFunctions.getTheta()}
+                            type="number" step="1"
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className='fire'>
+                        <span className='control-label'> </span><br/>
+                        <Button 
+                            color='danger' 
+                            onClick={() => context.addDeltaV([props.helmData.deltaV, props.helmData.theta])}>
+                                Fire
+                        </Button>
+                    </div>
                 </div>
-                <div className='theta'>
-                    <span className='control-label'>Angle (&deg;)</span>
-                    <Input
-                        name='setTheta'
-                        value={eventFunctions.getTheta()}
-                        type="number" step="1"
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className='fire'>
-                    <span className='control-label'> </span><br/>
-                    <Button 
-                        color='danger' 
-                        onClick={() => context.addDeltaV([props.helmData.deltaV, props.helmData.theta])}>
-                            Fire
-                    </Button>
-                </div>
-                <div className='guage'>
-                    <span className='control-label'>Propellant Guage</span><br />
-                    <Guage
-                        reserve={reserve}
-                        setting={setting}
-                        depleted={depleted}>
-
-                        <div className='reserve'></div>
-                        <div className='setting'></div>
-                        <div className='depleted'></div>
-                    </Guage>
-                </div>
+            </div>
+            <div className='guage'>
+                <span className='control-label'>Propellant Guage</span><br />
+                <Guage
+                    reserve={reserve}
+                    setting={setting}
+                    depleted={depleted}>
+                    <div className='reserve'></div>
+                    <div className='setting'></div>
+                    <div className='depleted'></div>
+                </Guage>
             </div>
         </Helm>
     );
