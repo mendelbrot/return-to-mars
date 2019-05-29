@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { PanelBox } from '../SharedStyles';
 import { Input, Button } from 'reactstrap'
 import SimContext from '../sim-helpers/SimContext';
-import HeadingControl from './HeadingControl';
+import HelmWheel from './HelmWheel';
 
 
 const Helm = styled(PanelBox)`
@@ -96,7 +96,7 @@ function HelmControls(props) {
     return (
         <Helm>
             <div className='topgroup'>
-                <HeadingControl 
+                <HelmWheel 
                     helmData={props.helmData}
                     width={helmControWidth}/>
                 <div className='topgroup-right'>

@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import SimContext from '../sim-helpers/SimContext';
 import ship from '../images/rocket.png'
 
@@ -16,25 +15,11 @@ class ViewScreen extends React.Component {
     ctx = null;
     ship = null;
 
-    constructor(props) {
-        super(props);
-
-        //this.simEngineStateChangeCallback = this.simEngineStateChangeCallback.bind(this);
-    }
-
     componentDidMount = () => {
-
-        //this.context.pushFunctionToStateChangeCallbackList(this.simEngineStateChangeCallback);
 
         this.initializeCanvas();
 
     }
-
-    // simEngineStateChangeCallback = () => {
-    //     this.drawBackground();
-    //     this.drawMars();
-    //     this.drawShip();
-    // }
 
     componentDidUpdate = () => {
         this.drawBackground();

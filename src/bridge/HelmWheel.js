@@ -1,7 +1,15 @@
 import React, { createRef, useEffect } from 'react';
-import { tsConstructSignatureDeclaration } from '@babel/types';
 
-function HeadingControl(props) {
+function HelmWheel(props) {
+
+    const bgColor = 'saddlebrown';
+
+    const WrapperStyle = {
+        backgroundColor: bgColor,
+        padding: 10,
+        borderRadius: 20,
+        marginRight: 20,
+    };
 
     const canvasRef = createRef();
 
@@ -9,6 +17,10 @@ function HeadingControl(props) {
         // initialize the canvas
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.rect(0, 0, props.width, props.width);
+        ctx.fillStyle = bgColor;
+        ctx.fill();
         ctx.save();
         const shw = 0.5 * props.width;
         ctx.translate(shw, shw);     //origin at the center
@@ -46,7 +58,7 @@ function HeadingControl(props) {
     }
 
     return (
-        <div>
+        <div style={WrapperStyle}>
             <canvas 
                 ref={canvasRef} 
                 onClick={setNewHeading} 
@@ -61,4 +73,4 @@ function HeadingControl(props) {
     );
 }
 
-export default HeadingControl;
+export default HelmWheel;

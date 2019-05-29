@@ -13,16 +13,17 @@ const Inst = styled(PanelBox)`
         }
 
     .plot {
+        border-radius: 20px;
         margin-bottom: 10px;
-        padding: 10px;
-        background-color: white;
-        border-radius: 10px;
+        background-color: orange;
     }
 
     .last {
         margin-bottom: 0px;
     }
 `
+
+const background = 'orange'
 
 function Instruments() {
 

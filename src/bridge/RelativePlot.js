@@ -5,8 +5,6 @@ import SimContext from '../sim-helpers/SimContext';
 
 
 const Plot = styled.div`
-
-    background-color: orange;
 `
 
 function RelativePlot(props) {
@@ -60,7 +58,7 @@ function RelativePlot(props) {
 
     return (
         <div> 
-            {valData.length < 2 ? <div style={{ width: width, height: height, backgroundColor: 'orange'}}/> :
+            {valData.length < 2 ? <div style={{ width: width, height: height }}/> :
                 <Plot>
                     <VictoryChart width={width} height={height}>
                         <VictoryAxis
